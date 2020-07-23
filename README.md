@@ -122,7 +122,7 @@ _see item types below_
 from Saber.s3dpak import s3dpak
 ...
 #exporting the entire content of the s3dpak
-saber_pak.export_all("export/") #it will automatically name it the name of the file
+saber_pak.export_all("export/") #it will automatically name
 
 #exporting just one item
 saber_pak.items["SceneData"].save("export/Scenedata") #must state the name of file
@@ -242,7 +242,7 @@ SceneData.save("file/location.extension")
 >SceneVis[]
 >
 
-##TexturesInfo
+## TexturesInfo
 Textures info is basically the same concept as SceneData. It is simply a list of strings. There is other data available in the TexturesInfo file; however, they seem to consistantly be the same. (0,0,0,1,1,1,0 if you're curious) 
 
 To load the data it's basically the same as everything else. You load the data by creating a textures_info object and pass the data at initialize, or _load()_ it manually.
