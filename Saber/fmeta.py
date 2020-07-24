@@ -33,6 +33,7 @@ class fmeta():
         self.load(data)
 
     def load(self, data):
+        self.items.clear()
         stream = io.BytesIO(data)
         count = int.from_bytes(stream.read(4), "little")
         stream.read(4) #burn padding
@@ -58,7 +59,7 @@ class fmeta():
 
         return output.getvalue()
 
-    def add_entry(self, file, size):
+    def add_entry(self, file, size = -1):
         if len(self.items) == 40:
             print("Exceeds maximum file size. Ignoring entry.")
             return
