@@ -5,6 +5,14 @@ SeT is a set of python scrips dedicated towards editing saber files for halo 1 a
 
 **__If you use the toolkit during development, things may change with updates__**
 
+Table of contents:  
+[s3dpak](#s3dpaks)  
+[ipak](#ipak)  
+[imeta](#imeta)  
+[fmeta](#fmeta)  
+[SceneData](#scenedata)  
+[TexturesInfo](#texturesinfo)
+
 ## s3dpaks
 SeT will handle decompression for you; however, compression has still yet to be implimented.
 To load a s3dpak you simply import the module, and create the object.
