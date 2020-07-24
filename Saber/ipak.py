@@ -1,4 +1,5 @@
 from Compression.Generation1.decompress import h1a_compressed_data
+from Saber.imeta import imeta
 
 import io
 from struct import pack
@@ -19,7 +20,7 @@ class ipak():
     0x5a : "ARGB8888/XRGB8888" # No block compression
     }
 
-    class imeta():
+    class item(imeta.item):
         class ipak_data():
             data_hex_type = {
             0  : "ARGB8888",
@@ -84,72 +85,9 @@ class ipak():
 
                 return output.getvalue()
 
-        #empty item
-        def __init__(self):
-            self.string = ""
-            self.constant1 = 1
-            self.width = 0
-            self.height = 0
-            self.constant2 = 1
-            self.mipmap_count = 0
-            self.face_count = 0
-            self.type = 0
-            self.size = 0
-            self.size2 = 0
-            self.size3 = 0
-            self.offset = 0
-
-            self.data = None
-
-        #load item from stream
-        def load_from_stream(self, stream):
-            self.string = stream.read(0x108).decode("utf-8").rstrip('\0')
-            self.constant1 = int.from_bytes(stream.read(4), "little")
-            self.width = int.from_bytes(stream.read(4), "little")
-            self.height = int.from_bytes(stream.read(4), "little")
-            self.constant2 = int.from_bytes(stream.read(4), "little")
-            self.mipmap_count = int.from_bytes(stream.read(4), "little")
-            self.face_count = int.from_bytes(stream.read(4), "little")
-            self.type = int.from_bytes(stream.read(4), "little")
-            stream.read(8)
-            self.size = int.from_bytes(stream.read(4), "little")
-            stream.read(4)
-            self.size2 = int.from_bytes(stream.read(4), "little")
-            self.offset = int.from_bytes(stream.read(4), "little")
-            stream.read(4)
-            self.size3 = int.from_bytes(stream.read(4), "little")
-            stream.read(4)
-
         def parse_block_data(self, stream):
             self.data = self.ipak_data()
             self.data.load_from_stream(stream)
-
-        #generate imeta entries
-        def compile_data(self):
-            output = io.BytesIO()
-            output.write(self.string.ljust(0x100, '\0').encode('utf-8'))
-            output.write(b'\00' * 8)
-            output.write(pack("<i", self.constant1))
-            output.write(pack("<i", self.width))
-            output.write(pack("<i", self.height))
-            output.write(pack("<i", self.constant2))
-            output.write(pack("<i", self.mipmap_count))
-            output.write(pack("<i", self.face_count))
-            output.write(pack("<i", self.type))
-            output.write(b'\00' * 8)
-            output.write(pack("<i", self.size))
-            output.write(pack("<i", 0))
-            output.write(pack("<i", self.size2))
-            output.write(pack("<i", self.offset))
-            output.write(pack("<i", 0))
-            output.write(pack("<i", self.size3))
-            output.write(pack("<i", 0))
-
-            return output.getvalue()
-
-        def save(self, path):
-            with open(path, "wb") as file:
-                file.write(self.compile_data())
 
     def __init__(self, data):
         compressed_data = h1a_compressed_data(data)
@@ -162,10 +100,10 @@ class ipak():
 
         #load the imeta, and texture data
         for i in range(self.count):
-            item = self.imeta()
-            item.load_from_stream(stream)
-            item.parse_block_data(io.BytesIO(self.data[item.offset : item.offset + item.size]))
-            self.items.update({item.string : item})
+            new_item = self.item()
+            new_item.load_from_stream(stream)
+            new_item.parse_block_data(io.BytesIO(self.data[new_item.offset : new_item.offset + new_item.size]))
+            self.items.update({new_item.string : new_item})
 
     def recalculate_offsets(self):
         offset = 0x00290008
