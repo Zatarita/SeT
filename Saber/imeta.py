@@ -2,16 +2,16 @@ import io
 from struct import pack
 
 class imeta():
-    items = []
+    items = {}
 
     class item():
         #empty item
-        def __init__(self,stream = None):
+        def __init__(self, stream = None):
             if not stream: return
-            self.load_from_stream(stream)
+            self.load(stream)
 
         #load item from stream
-        def load_from_stream(self, stream):
+        def load(self, stream):
             self.string = stream.read(0x108).decode("utf-8").rstrip('\0')
             self.constant1 = int.from_bytes(stream.read(4), "little")
             self.width = int.from_bytes(stream.read(4), "little")
@@ -57,12 +57,14 @@ class imeta():
         self.load(data)
 
     def load(self, data):
+        self.items.clear()
         stream = io.BytesIO(data)
         count = int.from_bytes(stream.read(4), "little")
         stream.read(4)
 
         for i in range(count):
-            self.items.append(self.item(stream))
+            item = self.item(stream)
+            self.items.update({item.string : item})
 
     def save(self, path):
         with open(path, "wb") as file:
@@ -71,3 +73,20 @@ class imeta():
             for item in self.items:
                 file.write(item.compile_data())
             file.write(b'\0' * (0x290008 - file.tell()))
+
+    def names(self):
+        return list(self.items.keys())
+
+    def find(self, string):
+        for i in range(len(self.items)):
+            if list(self.items.keys())[i] == string:
+                return i
+        return -1
+
+    def item_at_index(self, index):
+        if index > len(self.items) or index == -1:
+            return
+        return list(self.items.values())[index]
+
+    def delete(self, name):
+        del self.items[name]
