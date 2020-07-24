@@ -19,8 +19,8 @@ class ipak():
     0x5a : "ARGB8888/XRGB8888" # No block compression
     }
 
-    class item():
-        class data_item():
+    class imeta():
+        class ipak_data():
             data_hex_type = {
             0  : "ARGB8888",
             10 : "AI88",
@@ -64,9 +64,9 @@ class ipak():
 
             def save(self, path):
                 with open(path, "wb") as file:
-                    file.write(self.get_data_with_header())
+                    file.write(self.compile_data_with_header())
 
-            def get_header_with_data(self):
+            def compile_data_with_header(self):
                 output = io.BytesIO()
 
                 output.write(b"\xf0\x00\xff\xff\xff\xff\x54\x43\x49\x50\x02\x01\xff\xff\xff\xff")
@@ -121,11 +121,11 @@ class ipak():
             stream.read(4)
 
         def parse_block_data(self, stream):
-            self.data = self.data_item()
+            self.data = self.ipak_data()
             self.data.load_from_stream(stream)
 
-        #generate glossary entries
-        def get_header(self):
+        #generate imeta entries
+        def compile_data(self):
             output = io.BytesIO()
             output.write(self.string.ljust(0x100, '\0').encode('utf-8'))
             output.write(b'\00' * 8)
@@ -149,7 +149,7 @@ class ipak():
 
         def save(self, path):
             with open(path, "wb") as file:
-                file.write(self.get_header().getvalue())
+                file.write(self.compile_data())
 
     def __init__(self, data):
         compressed_data = h1a_compressed_data(data)
@@ -162,7 +162,7 @@ class ipak():
 
         #load the imeta, and texture data
         for i in range(self.count):
-            item = self.item()
+            item = self.imeta()
             item.load_from_stream(stream)
             item.parse_block_data(io.BytesIO(self.data[item.offset : item.offset + item.size]))
             self.items.update({item.string : item})
@@ -180,11 +180,11 @@ class ipak():
         output.write(pack("<i", len(self.items)))
         output.write(pack("<i", 0))
         for item in self.items.values():
-            output.write(item.get_header())
+            output.write(item.compile_data())
 
         output.write(b'\0' * (0x00290008 - output.tell()))
         for item in self.items.values():
-            output.write(item.data.get_header_with_data())
+            output.write(item.data.compile_data_with_header())
 
         output.write(b'\0' * 0x0001ffff)
 
