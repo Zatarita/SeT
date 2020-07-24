@@ -175,6 +175,57 @@ Set also supports the ipak format; however, it's not as flushed out as s3dpak ye
 
 **TODO - FILL THIS OUT**
 
+## Fmeta
+To load a fmeta you simply import the module, and create the object.
+to do this you can pass the data in the constructor, or you can create a blank object, and call the load function on it.
+```python
+from Saber.fmeta import fmeta
+...
+with open(file, "rb") as file:
+    content = file.read()
+fmeta_object = fmeta(content)
+#pass the data after initialize
+fmeta_object = fmeta()
+fmeta_object.load()
+```
+
+### Accessing fmeta contents
+the fmeta structure is fairly simple, it is just a list of files, and if it's a .map; it's decompressed size. The fmeta object has three variables. _string_ which holds the name, _decompressed_size_ which holds the decompressed size if the file is a .map, and _type_ which is either 0 for s3dpak, or 1 for .map
+```python
+from Saber.fmeta import fmeta
+...
+print(fmeta_object.items[0].decompressed_size)
+print(fmeta_object.items[0].string)
+print("map" if fmeta_object.items[0].type else "s3dpak")
+```
+
+### Modifying fmeta contents
+To modify the contents of a fmeta object we have a few options. we can add and entry with _add_entry(file, size)_ and we can delete an entry with _delete(name)_.
+
+>When adding an entry, if the size parameter is left blank, SeT will assume the file is a s3dpak. If the entry is a map file, we have to specify the decompressed map size. We can get that value with the _get_decompressed_size(path)_ function.
+```python
+from Saber.fmeta import fmeta
+...
+#adding to a fmeta
+fmeta_object.add_entry("a10.s3dpak")
+fmeta_object.add_entry("a30.s3dpak")
+#adding a .map
+filesize = fmeta.get_decompressed_size("location/to/a10.map")
+fmeta_object.add_entry("a10.map", filesize)
+...
+#delete an entry
+fmeta_object.delete("a30.s3dpak")
+```
+__Set does not look for duplicates yet when adding an entry__
+
+### Saving the changes
+After we have modified the data, we can save the new file to disk. We do this with the _save(path)_ function
+```python
+from Saber.fmeta import fmeta
+...
+fmeta_object.save("path/to/file.fmeta")
+```
+
 ## SceneData
 SeT has the SceneData file mapped out. It's a fairly simple format. SceneData is just a collection of a list of strings.
 To create a SceneData object just import the module, and pass the data. You can pass the data at initialize, or pass the data after with the _load(data)_ function
