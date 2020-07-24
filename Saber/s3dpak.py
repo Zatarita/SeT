@@ -151,14 +151,15 @@ class s3dpak():
         self.recalculate_offsets()
 
     def item_at_index(self, index):
-        if index > len(self.items):
-            return -1
+        if index > len(self.items) or index == -1:
+            return
         return list(self.items.values())[index]
 
     def find(self, item):
         for i in range(len(self.items)):
             if list(self.items.values())[i].string == item:
                 return i
+        return -1
 
     def names(self):
         return list(self.items.keys())
