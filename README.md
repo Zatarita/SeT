@@ -5,7 +5,7 @@ SeT is a set of python scrips dedicated towards editing saber files for halo 1 a
 
 **__If you use the toolkit during development, things may change with updates__**
 
-Table of contents:  
+## Table of contents:  
 [s3dpak](#s3dpaks)  
 [ipak](#ipak)  
 [imeta](#imeta)  
@@ -175,8 +175,8 @@ saber_pak.items["SceneData"].save("export/Scenedata") #must state the name of fi
 >"(.vis)" : 29
 >
 
-Each item has a numerical value that determines what type of file it is. When we import we must tell SeT what file type it is. We can either use the numerical value, or we can use the string name when using the import function. **Future versions of SeT will hopefully be able to determine file type based off content**
-
+Each item has a numerical value that determines what type of file it is. When we import we must tell SeT what file type it is. We can either use the numerical value, or we can use the string name when using the import function. **Future versions of SeT will hopefully be able to determine file type based off content**  
+[top](#table-of-contents)  
 
 ## Ipak
 to load a ipak import the module, and create the object.
@@ -246,8 +246,9 @@ ipak_object.item_at_index(index).save("path/to/file")             # save with sa
 ipak_object.item_at_index(index).save_rawdata("path/to/file")     # save texture data without header
 ipak_object.save("path/to/save.ipak")                             # save the entire ipak file
 ```
+[top](#table-of-contents)  
 
-## Imeta
+## imeta
 __IPAK IS CURRENTLY INCOMPLETE, MAY NOT WORK AS INTENDED__
 
 to load a imeta import the module, and create the object.
@@ -292,7 +293,7 @@ from Saber.imeta import imeta
 ...
 imeta_object.save("path/to/file.imeta")             # save imeta
 ```
-
+[top](#table-of-contents)  
 ## Fmeta
 To load a fmeta you simply import the module, and create the object.
 to do this you can pass the data in the constructor, or you can create a blank object, and call the load function on it.
@@ -343,7 +344,7 @@ from Saber.fmeta import fmeta
 ...
 fmeta_object.save("path/to/file.fmeta")
 ```
-
+[top](#table-of-contents)  
 ## SceneData
 SeT has the SceneData file mapped out. It's a fairly simple format. SceneData is just a collection of a list of strings.
 To create a SceneData object just import the module, and pass the data. You can pass the data at initialize, or pass the data after with the _load(data)_ function
@@ -410,7 +411,7 @@ SceneData.save("file/location.extension")
 >
 >SceneVis[]
 >
-
+[top](#table-of-contents)  
 ## TexturesInfo
 Textures info is basically the same concept as SceneData. It is simply a list of strings. There is other data available in the TexturesInfo file; however, they seem to consistantly be the same. (0,0,0,1,1,1,0 if you're curious) 
 
@@ -460,5 +461,5 @@ saber_pak.items["TexturesInfo"].data = TexturesInfo.compile_data()
 #save the edits to disk
 TexturesInfo.save("file/location.extension")
 ```
-
+[top](#table-of-contents)  
 currently this is all that has been developed. More to come
