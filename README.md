@@ -171,9 +171,119 @@ Each item has a numerical value that determines what type of file it is. When we
 
 
 ## Ipak
-Set also supports the ipak format; however, it's not as flushed out as s3dpak yet. It has a similar structure as the s3dpak; however, until it's fully finished this will remain blank
+to load a ipak import the module, and create the object.
+You can pass the data at initialize, or you can create a blank object, and pass the data with the _load_ function.
+```python
+from Saber.ipak import ipak
+...
+with open(file, "rb") as file:
+    content = file.read()
+ipak_object = ipak(content)
+#pass the data after initialize
+ipak_object = ipak()
+ipak_object.load(content)
+```
 
-**TODO - FILL THIS OUT**
+## accessing ipak contents
+__IPAK IS CURRENTLY INCOMPLETE, MAY NOT WORK AS INTENDED__
+__Ipak requires 64 bit python. You wont have enough memory to decompress an ipak on 32 bit (will add failsafe to use file buffer in future)__
+
+The ipak consists of a list of imetas, and their coorosponding texture data. The items variable in the ipak object holds the imeta information, and the and the items.data object holds the ipak data. The structure of an ipak is fairly large.
+
+### item content
+>imeta (see imeta for more information on the structure)
+>
+>data.width
+>
+>data.height
+>
+>data.unknown = 1
+>
+>data.face_count
+>
+>data.type
+>
+>data.mipmap_count
+>
+
+### accessing the information
+accessing the information is similar to s3dpaks. You need to know the name of the data you wish to access. to do this you can use the _names()_ function to get a list of available names in the ipak. then you reference the item using one of those names. You can also access items by index by using _find(string)_, and _item_at_index(index)_.
+```python
+from Saber.ipak import ipak
+...
+ipak_names = ipak_object.names()
+print(ipak_names[0])
+index = ipak_object.find("xbox_rt_b")
+if index = -1: print("Texture not found with that name")
+else: print(ipak_object.item_at_index(index).data.type)
+```
+>in this example, we assume there is a texture named "xbox_rt_b", if it didnt exist, find would return -1
+
+### Modifying the information
+currently this part is what is under development. Adding textures to the imeta requires analyzing a dds header and extracting the information to populate the data. Not difficult, but to be done. You CAN currently delete data
+```python
+from Saber.ipak import ipak
+...
+ipak_object.delete("xbox_rt_b")
+```
+
+### Saving
+There are a few ways to save ipak data. you can save the entire file with _save(path)_, you can save an individual item with _items[x].save(path)_, or you can save just the dds raw data without the header with _items[x].save_rawdata(path)_.
+```python
+from Saber.fmeta import ipak
+...
+index = ipak_object.find("xbox_rt_b")
+if index = -1: print("Texture not found with that name")
+ipak_object.item_at_index(index).save("path/to/file")             # save with saber header data
+ipak_object.item_at_index(index).save_rawdata("path/to/file")     # save texture data without header
+ipak_object.save("path/to/save.ipak")                             # save the entire ipak file
+```
+
+## Imeta
+__IPAK IS CURRENTLY INCOMPLETE, MAY NOT WORK AS INTENDED__
+
+to load a imeta import the module, and create the object.
+You can pass the data at initialize, or you can create a blank object, and pass the data with the _load(data)_ function.
+```python
+from Saber.imeta import ipak
+...
+with open(file, "rb") as file:
+    content = file.read()
+imeta_object = imeta(content)
+#pass the data after initialize
+imeta_object = imeta()
+imeta_object.load(content)
+```
+
+### accessing the information
+The data in an imeta object is similiar to s3dpak, and ipak. you can reference the item by name, or you can reference by index. To find out the names you use the _names()_ function, or you can search for an index using _find(string)_ and refernce the item with that index using _item_at_index(index)_
+```python
+from Saber.imeta import imeta
+...
+imeta_names = imeta_object.names()
+print(imeta_names[0])
+index = imeta_names.find("xbox_rt_b")
+if index = -1: print("Texture not found with that name")
+else: print(imeta_object.item_at_index(index).offset)
+```
+>in this example, we assume there is a texture named "xbox_rt_b", if it didnt exist, find would return -1
+
+### Modifying the information
+currently, we can only delete data (see ipak for more information)
+
+```python
+from Saber.imeta import imeta
+...
+imeta_object.delete("xbox_rt_b")
+```
+
+### Saving
+you can save the entire file with _save(path)_
+```python
+from Saber.imeta import imeta
+...
+imeta_object.save("path/to/file.imeta")             # save imeta
+```
 
 ## Fmeta
 To load a fmeta you simply import the module, and create the object.
@@ -186,7 +296,7 @@ with open(file, "rb") as file:
 fmeta_object = fmeta(content)
 #pass the data after initialize
 fmeta_object = fmeta()
-fmeta_object.load()
+fmeta_object.load(content)
 ```
 
 ### Accessing fmeta contents
