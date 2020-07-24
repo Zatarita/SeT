@@ -89,7 +89,12 @@ class ipak():
             self.data = self.ipak_data()
             self.data.load_from_stream(stream)
 
-    def __init__(self, data):
+    def __init__(self, data = None):
+        if not data: return
+        self.load(data)
+
+    def load(self,data):
+        self.items.clear()
         compressed_data = h1a_compressed_data(data)
         self.data = compressed_data.decompress()
         stream = io.BytesIO(self.data)
@@ -100,8 +105,7 @@ class ipak():
 
         #load the imeta, and texture data
         for i in range(self.count):
-            new_item = self.item()
-            new_item.load_from_stream(stream)
+            new_item = self.item(stream)
             new_item.parse_block_data(io.BytesIO(self.data[new_item.offset : new_item.offset + new_item.size]))
             self.items.update({new_item.string : new_item})
 
@@ -128,3 +132,21 @@ class ipak():
 
         with open(path, "wb") as file:
             file.write(output.getvalue())
+
+    def names(self):
+        return list(self.items.keys())
+
+    def find(self, string):
+        for i in range(len(self.items)):
+            if list(self.items.keys())[i] == string:
+                return i
+        return -1
+
+    def item_at_index(self, index):
+        if index > len(self.items) or index == -1:
+            return
+        return list(self.items.values())[index]
+
+    def delete(self, name):
+        del self.items[name]
+        self.recalculate_offsets()
