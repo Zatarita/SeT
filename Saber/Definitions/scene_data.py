@@ -43,12 +43,13 @@ class scene_data():
     def compile_data(self):
         string = ""
 
-        for label, list in self.map.items():
-            if not list: continue
+        for label, object in self.map.items():
+            label = list(set(object))
+            if not object: continue
             string += label + "    =    [\n"
-            for item in list:
+            for item in object:
                 string += '\t"' + item + '"'
-                if item != list[-1:][0]: string += "," #if not last item add coma
+                if item != object[-1:][0]: string += "," #if not last item add coma
                 string += "\n"
             string += "]\n"
 
