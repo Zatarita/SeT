@@ -3,8 +3,6 @@ from struct import pack
 
 
 class imeta():
-    items = {}
-
     class item():
         #empty item
         def __init__(self, stream = None):
@@ -54,6 +52,7 @@ class imeta():
             return output.getvalue()
 
     def __init__(self, data = None):
+        self.items = {}
         if not data: return
         self.load(data)
 

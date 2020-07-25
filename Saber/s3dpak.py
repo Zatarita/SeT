@@ -4,8 +4,7 @@ import io
 from struct import pack
 
 class s3dpak():
-    count = 0
-    items = {}
+
 
     type_definitions = {
     "Scene Data" : 0,
@@ -85,6 +84,8 @@ class s3dpak():
 
     #s3dpak object
     def __init__(self, data = None, percent_hook = None, status_hook = None):
+        self.count = 0
+        self.items = {}
         if data == None: return
         self.load(data, percent_hook, status_hook)
 

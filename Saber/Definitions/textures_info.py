@@ -2,9 +2,8 @@ from io import BytesIO
 from struct import pack
 
 class textures_info:
-    items = []
-
     def __init__(self, data= None):
+        self.items = []
         if data: self.load(data)
 
     def load(self, data):
@@ -15,10 +14,15 @@ class textures_info:
             stream.seek(stream.tell() + 28)
 
     def add_entry(self, string):
+        if string in self.items:
+            return
         self.items.append(string)
 
     def add_entries(self, strings):
-        self.items += strings
+        for string in strings:
+            if string in self.items:
+                continue
+            self.items.append(string)
 
     def delete(self, string):
         del self.items[string]
