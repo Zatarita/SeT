@@ -64,12 +64,15 @@ class fmeta():
             print("Exceeds maximum file size. Ignoring entry.")
             return
         new_item = self.item()
+        if file in self.items:
+            return
         if size == 0:
             new_item.generate_from_file(file, 0 ,size)
         else:
             new_item.generate_from_file(file, 1, size)
 
         self.items.append(new_item)
+        self.items.sort()
 
     def delete(self, string):
         for item in self.items:
