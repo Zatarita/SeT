@@ -1,3 +1,0 @@
-{
-    "files": ["Saber/Definitions/scene_data.py","Compression/Generation1/decompress.py","Compression/decompress.py","Saber/imeta.py","Saber/Definitions/imeta.py","Compression/gen 1/decompress.py","Compression/gen 1/compression.py","Compression/compression.py","Saber/s3dpak.py","main.py","Saber/ipak.py","Saber/Definitions/textures_info.py","Saber/Definitions/tpl.py","Compression/Generation2/decompress.py","Compression/Generation1/compress.py","Saber/fmeta.py","tools/imeta_from_scenedata.py"]
-}
