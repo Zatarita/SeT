@@ -1,9 +1,9 @@
-import zlib, shutil
+import zlib, shutil, os
 
 class h1a_compressed_data():
     name = ""
     data = None
-    decompressed_data = []
+    decompressed_data = None
 
     count = 0
     offsets = []
@@ -51,20 +51,24 @@ class h1a_compressed_data():
 
     def decompress(self):
         self.status_changed("Decompressing blocks...")
-        for i in range(len(self.blocks)):
-            self.percentage_changed(float(i)/len(self.blocks))
-            self.decompressed_data.append(zlib.decompress(self.blocks[i]))
-        self.status_changed("Done!")
-        return b''.join(self.decompressed_data)
+        with open(".TMP\ipak_tmp","wb") as file:
+            for i in range(len(self.blocks)):
+                self.percentage_changed(float(i)/len(self.blocks))
+                file.write(zlib.decompress(self.blocks[i]))
+            self.status_changed("Done!")
+
+        with open(".TMP\ipak_tmp","rb") as file:
+            self.decompressed_data = file.read()
+
+        os.remove(".TMP\ipak_tmp")
+        return self.decompressed_data
 
     def save(self, path):
         with open(path, "wb") as file:
             if len(self.decompressed_data) == 0: return
 
             self.status_changed("Writing file...")
-            for i in range(len(self.decompressed_data)):
-                self.percentage_changed(float(i)/len(self.decompressed_data))
-                file.write(self.decompressed_data[i])
+            file.write(self.decompressed_data)
 
     def percentage_changed(self, percentage):
         pass

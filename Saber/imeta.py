@@ -1,6 +1,7 @@
 import io
 from struct import pack
 
+
 class imeta():
     items = {}
 
@@ -12,7 +13,7 @@ class imeta():
 
         #load item from stream
         def load(self, stream):
-            self.string = stream.read(0x108).decode("utf-8").rstrip('\0')
+            self.string = stream.read(0x108).decode("ANSI").rstrip('\0')
             self.constant1 = int.from_bytes(stream.read(4), "little")
             self.width = int.from_bytes(stream.read(4), "little")
             self.height = int.from_bytes(stream.read(4), "little")

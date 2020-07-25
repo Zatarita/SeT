@@ -84,7 +84,11 @@ class s3dpak():
                 file.write(self.data)
 
     #s3dpak object
-    def __init__(self, data, percent_hook = None, status_hook = None):
+    def __init__(self, data = None, percent_hook = None, status_hook = None):
+        if data == None: return
+        self.load(data, percent_hook, status_hook)
+
+    def load(self, data, percent_hook = None, status_hook = None):
         self.data = h1a_compressed_data(data, percent_hook, status_hook).decompress()
         stream = io.BytesIO(self.data)
 

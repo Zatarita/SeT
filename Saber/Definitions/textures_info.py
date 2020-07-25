@@ -18,8 +18,7 @@ class textures_info:
         self.items.append(string)
 
     def add_entries(self, strings):
-        for item in strings:
-            self.items.append(item)
+        self.items += strings
 
     def delete(self, string):
         del self.items[string]

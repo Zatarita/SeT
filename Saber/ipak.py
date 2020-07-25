@@ -5,11 +5,6 @@ import io
 from struct import pack
 
 class ipak():
-    count = 0
-    items = {}
-
-    data = None
-
     ipak_hex_type = {
     0x30 : "AI88", #No block compression
     0x46 : "AXT1/OXT1", #BC1
@@ -35,7 +30,7 @@ class ipak():
             }
 
             #empty item
-            def __init__(self):
+            def __init__(self, stream = None):
                 self.width = 0
                 self.height = 0
                 self.unknown = 1
@@ -85,15 +80,22 @@ class ipak():
 
                 return output.getvalue()
 
+        def __init__(self, stream):
+            self.load(stream)
+
         def parse_block_data(self, stream):
             self.data = self.ipak_data()
             self.data.load_from_stream(stream)
 
-    def __init__(self, data = None):
-        if not data: return
-        self.load(data)
+    def __init__(self, data = None, percent_hook = None, status_hook = None):
+        self.count = 0
+        self.items = {}
 
-    def load(self,data):
+        self.data = None
+        if not data: return
+        self.load(data, percent_hook, status_hook)
+
+    def load(self, data, percent_hook = None, status_hook = None):
         self.items.clear()
         compressed_data = h1a_compressed_data(data)
         self.data = compressed_data.decompress()
