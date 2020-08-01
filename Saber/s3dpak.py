@@ -1,4 +1,4 @@
-from Compression.Generation1.decompress import h1a_compressed_data
+from SeT.Compression.Generation1.decompress import h1a_compressed_data
 
 import io
 from struct import pack
@@ -86,6 +86,11 @@ class s3dpak():
     def __init__(self, data = None, percent_hook = None, status_hook = None):
         self.count = 0
         self.items = {}
+
+        if type(data) == str:
+            with open(data, "rb") as file:
+                data = file.read()
+
         if data == None: return
         self.load(data, percent_hook, status_hook)
 
