@@ -1,5 +1,5 @@
 from SeT.Compression.Generation1.decompress import h1a_compressed_data
-from SeT.Saber.imeta import imeta
+from Saber.imeta import imeta
 
 import io
 from struct import pack
