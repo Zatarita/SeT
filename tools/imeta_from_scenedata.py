@@ -1,4 +1,4 @@
-from SeT.Saber.ipak import ipak
+from Saber.ipak import ipak
 from PyQt5.QtCore import qDebug
 
 import io, struct
