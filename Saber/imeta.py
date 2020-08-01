@@ -53,6 +53,11 @@ class imeta():
 
     def __init__(self, data = None):
         self.items = {}
+
+        if type(data) == str:
+            with open(data, "rb") as file:
+                data = file.read()
+
         if not data: return
         self.load(data)
 
