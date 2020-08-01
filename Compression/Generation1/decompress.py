@@ -51,16 +51,16 @@ class h1a_compressed_data():
 
     def decompress(self):
         self.status_changed("Decompressing blocks...")
-        with open(".TMP\ipak_tmp","wb") as file:
+        with open("tmp","wb") as file:
             for i in range(len(self.blocks)):
                 self.percentage_changed(float(i)/len(self.blocks))
                 file.write(zlib.decompress(self.blocks[i]))
             self.status_changed("Done!")
 
-        with open(".TMP\ipak_tmp","rb") as file:
+        with open("tmp","rb") as file:
             self.decompressed_data = file.read()
 
-        os.remove(".TMP\ipak_tmp")
+        os.remove("tmp")
         return self.decompressed_data
 
     def save(self, path):
