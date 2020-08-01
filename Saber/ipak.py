@@ -1,4 +1,4 @@
-from SeT.Compression.Generation1.decompress import h1a_compressed_data
+from Compression.Generation1.decompress import h1a_compressed_data
 from Saber.imeta import imeta
 
 import io
