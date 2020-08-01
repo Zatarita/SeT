@@ -1,18 +1,23 @@
-from Saber.ipak import ipak
+from SeT.Saber.ipak import ipak
 from PyQt5.QtCore import qDebug
 
 import io, struct
 
 
 def imeta_from_scenedata(scenedata, inplace1_loc, inplace2_loc):
+    inplace1 = inplace1_loc
+    inplace2 = inplace2_loc
 
-    print("Loading ipak headers:")
-    with open(inplace1_loc, 'rb') as file:
-        print("\t" + inplace1_loc)
-        inplace1 = ipak(file.read())
-    with open(inplace2_loc, 'rb') as file:
-        print("\t" + inplace2_loc)
-        inplace2 = ipak(file.read())
+    if type(inplace1_loc) != ipak:
+        print("Loading inplace1..")
+        with open(inplace1_loc, 'rb') as file:
+            print("\t" + inplace1_loc)
+            inplace1 = ipak(file.read())
+    if type(inplace1_loc) != ipak:
+        print("Loading inplace2..")
+        with open(inplace2_loc, 'rb') as file:
+            print("\t" + inplace2_loc)
+            inplace2 = ipak(file.read())
 
     print("Finding dependancies")
     output = io.BytesIO()
@@ -24,7 +29,8 @@ def imeta_from_scenedata(scenedata, inplace1_loc, inplace2_loc):
                       'menu_common_i17', 'menu_common_i7', 'menu_manager_i54',
                       'menu_manager_i5f', 'msg_box_i6', 'part_alias_akill',
                       'part_alias_normal', 'part_alias_transp', 'part_plasma',
-                      'scorch_pak_parallax', 'xbox_rt_b']
+                      'scorch_pak_parallax', 'xbox_rt_b', 'smoke_sm',
+                      'part_rmp_flame_01']
 
     dependancies = scenedata.Textures + unlisted_names
     dependancies.sort()
