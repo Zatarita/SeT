@@ -1,7 +1,7 @@
 import io
 from struct import pack
 
-from Compression.Generation1.decompress import h1a_compressed_data
+from SeT.Compression.Generation1.decompress import h1a_compressed_data
 
 class fmeta():
 
@@ -29,6 +29,11 @@ class fmeta():
 
     def __init__(self, data = None):
         self.items = []
+
+        if type(data) == str:
+            with open(data, "rb") as file:
+                data = file.read()
+
         if not data: return
         self.load(data)
 
