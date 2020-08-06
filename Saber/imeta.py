@@ -53,6 +53,11 @@ class imeta():
 
     def __init__(self, data = None):
         self.items = {}
+
+        if type(data) == str:
+            with open(data, "rb") as file:
+                data = file.read()
+
         if not data: return
         self.load(data)
 
@@ -70,8 +75,8 @@ class imeta():
         with open(path, "wb") as file:
             file.write(pack("<i", len(self.items)))
             file.write(b'\0' * 4)
-            for item in self.items:
-                file.write(item.compile_data())
+            for obj in self.items.values():
+                file.write(obj.compile_data())
             file.write(b'\0' * (0x290008 - file.tell()))
 
     def names(self):

@@ -91,7 +91,10 @@ class ipak():
         self.count = 0
         self.items = {}
 
-        self.data = None
+        if type(data) == str:
+            with open(data, "rb") as file:
+                data = file.read()
+
         if not data: return
         self.load(data, percent_hook, status_hook)
 

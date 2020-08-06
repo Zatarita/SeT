@@ -3,29 +3,31 @@ from struct import pack
 
 class scene_data():
 
-    SceneData = []
-    CacheBlock = []
-    Textures = []
-    SoundData = []
-    Templates = []
-    VoiceSplines = []
-    Scene = []
-    Hkx = []
-    TexturesDistanceFile = []
-    CheckPointTexFile = []
-    SceneRain = []
-    SceneGrs = []
-    SceneCDT = []
-    SceneSM = []
-    SceneVis = []
 
     def __init__(self, data = None):
+
+        self.SceneData = []
+        self.CacheBlock = []
+        self.Textures = []
+        self.SoundData = []
+        self.Templates = []
+        self.VoiceSplines = []
+        self.Scene = []
+        self.Hkx = []
+        self.TexturesDistanceFile = []
+        self.CheckPointTexFile = []
+        self.SceneRain = []
+        self.SceneGrs = []
+        self.SceneCDT = []
+        self.SceneSM = []
+        self.SceneVis = []
+
         self.size = 0
         self.map = {
         "SceneData" : self.SceneData,
         "CacheBlock" : self.CacheBlock,
         "Textures" : self.Textures,
-        "SoundData" : self.SoundData,
+        "Soun   dData" : self.SoundData,
         "Templates" : self.Templates,
         "VoiceSplines" : self.VoiceSplines,
         "Scene" : self.Scene,
