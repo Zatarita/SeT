@@ -52,6 +52,20 @@ class Imeta(SaberFileGeneric):
             # to - do
             pass
 
+        def typeFromIpakChild(self, ipak_child):
+            mapper = {
+                "0": 0x5a,
+                "10": 0x30,
+                "12": 0x46,
+                "13": 0x46,
+                "15": 0x49,
+                "17": 0x4c,
+                "22": 0x5a,
+                "36": 0x52,
+                "37": 0x4f
+            }
+            self.type = mapper.get(str(ipak_child.type))
+
         def formatData(self):
             output = StreamWriter()
             output.writeString(self.string.ljust(0x108, "\0"))
@@ -86,6 +100,7 @@ class Imeta(SaberFileGeneric):
         for i in range(count):
             new_child = self.Child(data_stream)
             self.children.update({new_child.string: new_child})
+
 
     # -----------------------------------------------------Compile Data Over Ride
     def compileData(self):
