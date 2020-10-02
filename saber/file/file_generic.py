@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from compression.h1a.decompress import decompressor
+from compression.h1a.compressor import compressor
 
 """
     FileGeneric:
@@ -14,14 +15,11 @@ class FileGeneric(metaclass=ABCMeta):
 
     # compress the file data
     def compress(self):
-        # if self.compressed:
-        # self.compressed = False
-        pass
+        return compressor(self.data)
 
     # decompress the files data
     def decompress(self):
         self.data = decompressor(self.data)
-        pass
 
     # Load a file from path.
     def load(self, path, compressed=False):
@@ -32,19 +30,16 @@ class FileGeneric(metaclass=ABCMeta):
         # Decompress if compressed
         if compressed:
             self.decompress()
+            self.compressed = True
 
     # Save a file to path.
     def save(self, path):
-        # Compress if it was originally compressed
-        if not self.compressed:
-            self.compress()
-
         # Format the data
         self.data = self.compileData()
 
         # Save
         with open(path, "wb") as file:
-            file.write(self.data)
+            file.write(self.data if not self.compressed else self.compress())
 
     # -----------------------------------------------------Virtual Function **MUST OVERRIDE**
     @abstractmethod

@@ -40,7 +40,7 @@ class StreamWriter(BytesIO):
         self.endian = endian
 
     def writeInt(self, data):
-        self.write(pack(self.endian + "i", data))
+        self.write(pack(self.endian + "I", data))
 
     def writeString(self, string, encoding="utf-8"):
         self.write(string.encode(encoding))

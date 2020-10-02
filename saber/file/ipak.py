@@ -60,6 +60,11 @@ class Ipak(SaberFileGeneric):
             self.type = dds.typeToHaloEnum()
             self.data = dds.pixelData
 
+        def loadFromFileRaw(self, file):
+            data = open(file, "rb").read()
+            stream = StreamParser(data)
+            self.loadFromStream(stream, size=len(data)-58)
+
         def formatData(self):
             output = StreamWriter()
 
@@ -80,7 +85,7 @@ class Ipak(SaberFileGeneric):
             return output.getvalue()
 
         def getData(self):
-            return self.formatData
+            return self.formatData()
 
         def getRawData(self):
             return self.data
@@ -107,9 +112,17 @@ class Ipak(SaberFileGeneric):
         # create ipak child
         new_child = self.Child()
         new_child.loadFromFile(path)
+        self.imetaFromChild(new_child, path.split("/")[-1].split(".")[0])
+
+    def loadFromRaw(self, path):
+        new_child = self.Child()
+        new_child.loadFromFileRaw(path)
+        self.imetaFromChild(new_child, path.split("/")[-1].split(".")[0])
+
+    def imetaFromChild(self, new_child, name):
         # create imeta entry from child
         new_imeta_child = Imeta.Child()
-        new_imeta_child.string = path.split("/")[-1].split(".")[0]
+        new_imeta_child.string = name
         new_imeta_child.height = new_child.height
         new_imeta_child.width = new_child.width
         new_imeta_child.mip_map_count = new_child.mip_map_count
@@ -120,6 +133,8 @@ class Ipak(SaberFileGeneric):
         new_imeta_child.typeFromIpakChild(new_child)
         self.children.update({new_imeta_child.string: new_child})
         self.imeta.children.update({new_imeta_child.string: new_imeta_child})
+
+
 
     # -----------------------------------------------------Compile Data Over Ride
     def compileData(self):

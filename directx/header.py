@@ -190,51 +190,52 @@ class DDS_HEADER_DXT10:
         self.arraySize = 0
         self.miscFlags2 = 0
 
+class DDS_PIXELFORMAT:
+    # dwFlag values for ddsPixelFormat.flags
+    class dwFlags(IntFlag):
+        DDPF_ALPHAPIXELS = 0x1
+        DDPF_ALPHA = 0x2
+        DDPF_FOURCC = 0x4
+        DDPF_RGB = 0x40
+        DDPF_YUV = 0x200
+        DDPF_LUMINANCE = 0x20000
+
+    def __init__(self):
+        self.size = 0x20
+        self.flags = 0
+        self.fourCC = ""
+        self.RGBBitCount = 0
+        self.RBitMask = 0
+        self.GBitMask = 0
+        self.BBitMask = 0
+        self.ABitMask = 0
+
+    def compile(self, stream: StreamWriter):
+        stream.writeInt(self.size)
+        stream.writeInt(self.flags)
+        if self.fourCC:
+            stream.writeString(self.fourCC)
+        else:
+            stream.writeInt(0)
+        stream.writeInt(self.RGBBitCount)
+        stream.writeInt(self.RBitMask)
+        stream.writeInt(self.GBitMask)
+        stream.writeInt(self.BBitMask)
+        stream.writeInt(self.ABitMask)
+
+    def load(self, stream: StreamParser):
+        self.size = stream.readInt(4)
+        self.flags = stream.readInt(4)
+        self.fourCC = stream.readString(length=4)
+        self.RGBBitCount = stream.readInt(4)
+        self.RBitMask = stream.readInt(4)
+        self.GBitMask = stream.readInt(4)
+        self.BBitMask = stream.readInt(4)
+        self.ABitMask = stream.readInt(4)
+
+
 
 class DDS_HEADER:
-    class DDS_PIXELFORMAT:
-        # dwFlag values for ddsPixelFormat.flags
-        class dwFlags(IntFlag):
-            DDPF_ALPHAPIXELS = 0x1
-            DDPF_ALPHA = 0x2
-            DDPF_FOURCC = 0x4
-            DDPF_RGB = 0x40
-            DDPF_YUV = 0x200
-            DDPF_LUMINANCE = 0x20000
-
-        def __init__(self):
-            self.size = 0x20
-            self.flags = 0
-            self.fourCC = ""
-            self.RGBBitCount = 0
-            self.RBitMask = 0
-            self.GBitMask = 0
-            self.BBitMask = 0
-            self.ABitMask = 0
-
-        def compile(self, stream: StreamWriter):
-            stream.writeInt(self.size)
-            stream.writeInt(self.flags)
-            if self.fourCC:
-                stream.writeString(self.fourCC)
-            else:
-                stream.writeInt(0)
-            stream.writeInt(self.RGBBitCount)
-            stream.writeInt(self.RBitMask)
-            stream.writeInt(self.GBitMask)
-            stream.writeInt(self.BBitMask)
-            stream.writeInt(self.ABitMask)
-
-        def load(self, stream: StreamParser):
-            self.size = stream.readInt(4)
-            self.flags = stream.readInt(4)
-            self.fourCC = stream.readString(length=4)
-            self.RGBBitCount = stream.readInt(4)
-            self.RBitMask = stream.readInt(4)
-            self.GBitMask = stream.readInt(4)
-            self.BBitMask = stream.readInt(4)
-            self.ABitMask = stream.readInt(4)
-
     def __init__(self):
         self.magic = "DDS "
         self.size = 0x7c
@@ -245,7 +246,7 @@ class DDS_HEADER:
         self.depth = 0
         self.mipmap_count = 0
         self.reserved = [0] * 11
-        self.ddspf = self.DDS_PIXELFORMAT()
+        self.ddspf = DDS_PIXELFORMAT()
         self.caps = 0
         self.caps2 = 0
         self.caps3 = 0 # unused
@@ -257,6 +258,7 @@ class DDS_HEADER:
         stream = StreamWriter()
         stream.writeString(self.magic)
         stream.writeInt(self.size)
+        stream.writeInt(self.flags)
         stream.writeInt(self.height)
         stream.writeInt(self.width)
         stream.writeInt(self.pitchOrLinearSize)
@@ -270,6 +272,7 @@ class DDS_HEADER:
         stream.writeInt(self.caps3)
         stream.writeInt(self.caps4)
         stream.writeInt(self.reserved2)
+        return stream.getvalue()
 
     def setDimensions(self, height: int, width: int):
         self.height = height
@@ -329,7 +332,7 @@ class DDS_TEXTURE:
         # if no type found by fourCC, it is either ai88, argb, or xrgb
         if self.header.ddspf.GBitMask == 0x0000ff00:
             # if there is a green channel mask
-            if self.header.flags & DDS_HEADER.DDS_PIXELFORMAT.dwFlags.DDPF_ALPHAPIXELS:
+            if self.header.flags & DDS_PIXELFORMAT.dwFlags.DDPF_ALPHAPIXELS:
                 return 0
             else:
                 return 22
