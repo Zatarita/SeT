@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from compression.h1a.decompress import decompressor
-from compression.h1a.compressor import compressor
+from compression.h1a.compress import compressor
 
 """
     FileGeneric:

@@ -3,6 +3,12 @@ import os
 
 from common.data_parsing import StreamParser
 
+"""
+    decompressor:
+        Function to handle decomrpessing h1a files
+            data: compressed data
+            return: decompressed data (surprising)
+"""
 
 def decompressor(data):
     count = 0
@@ -10,12 +16,13 @@ def decompressor(data):
     offsets = []
     blocks = []
 
+    # read the chunk count
     count = stream.readInt(4)
 
     # read offsets
     for i in range(count):
         offsets.append(stream.readInt(4))
-    # temporary offset to calculate size
+    # temporary offset to calculate last - end
     offsets.append(len(data))
     # seek to first entry
     stream.seek(offsets[0])
@@ -23,8 +30,6 @@ def decompressor(data):
     # read the blocks
     for i in range(count):
         blocks.append(stream.read(offsets[i+1] - offsets[i]))
-    # remove temporary offset
-    offsets.pop()
 
     # using a file buffer to mitigate ram issues
     with open("tmp", "wb") as file:
