@@ -1,3 +1,5 @@
+### most of this is outdated
+
 # SeT
 ## Saber editing toolkit
 
