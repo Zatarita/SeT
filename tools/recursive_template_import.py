@@ -29,7 +29,7 @@ def recursiveTemplateImport(target: SaberPak, imeta : Imeta, path):
             if scene_data:
                 scene_data.Templates.append(file.split(".")[0])
 
-    #if scene_data:
-        #target.children["SceneData"].data = scene_data.compile_data()
+    if scene_data:
+        target.children["SceneData"].data = scene_data.compile_data()
 
     return (target, imeta)

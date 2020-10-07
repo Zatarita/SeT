@@ -26,4 +26,4 @@ class Template:
     def extractRecursive(self, imeta: Imeta(), path):
         for dependency in self.dependecies:
             imeta.exportChild(path + "/" + dependency + ".imeta_child", dependency)
-            open(path + "/" + self.name, "wb").write(self.data)
+        open(path + "/" + self.name, "wb").write(self.data)

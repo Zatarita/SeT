@@ -23,7 +23,6 @@ def decompressor(data):
     with open("tmp", "wb") as file:
         for i in range(len(offsets) - 1):
             chunk = zlib.decompress(data[offsets[i] : offsets[i + 1]])
-            print(hex(len(chunk)))
             file.write(chunk)
 
     # read the buffer back

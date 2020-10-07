@@ -53,6 +53,7 @@ class StreamParser(BytesIO):
         else:
             if length >= 0:
                 # if a length is specified just read the block, and decode it.
+                test = self.tell()
                 return self.read(length).decode(encoding)
 
     # burn padding of set length

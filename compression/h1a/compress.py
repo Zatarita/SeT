@@ -30,7 +30,7 @@ def compressor(data):
             header.writeInt(offset)
 
             # compress the chunk
-            compressed_chunk = zlib.compress(chunk, 9)
+            compressed_chunk = zlib.compress(chunk, 0)
             # update the offset to include the size of the compressed chunk
             offset += len(compressed_chunk) + 4
             # write the compressed chunk
