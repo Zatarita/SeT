@@ -1,12 +1,11 @@
-from tools.tex_mod.UI.logic.window import Window
-
 from PyQt5.QtWidgets import QApplication
+from tools.SMI.UI.design.window import WindowUI
 
 import sys
 
 
 if __name__ == "__main__":
     app = QApplication([])
-    window = Window()
+    window = WindowUI()
 
     sys.exit(app.exec_())

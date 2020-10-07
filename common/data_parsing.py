@@ -45,7 +45,7 @@ class StreamParser(BytesIO):
                 # Append the character from the stream to the string buffer
                 string_builder += char_buffer
                 # read the next character
-                char_buffer += self.read(1).decode(encoding)
+                char_buffer = self.read(1).decode(encoding)
 
             # once complete, return the created string.
             return string_builder
@@ -83,6 +83,9 @@ class StreamWriter(BytesIO):
     # Write an integer to the stream
     def writeInt(self, data: int):
         self.write(pack(self.endian + "I", data))
+
+    def writeInt64(self, data: int):
+        self.write(pack(self.endian + "Q", data))
 
     # Write a string to the stream
     def writeString(self, string, encoding="utf-8"):

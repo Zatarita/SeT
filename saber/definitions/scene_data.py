@@ -1,7 +1,7 @@
 import io
 from struct import pack
 
-class scene_data():
+class SceneData():
 
 
     def __init__(self, data = None):
@@ -46,7 +46,7 @@ class scene_data():
         string = ""
 
         for label, object in self.map.items():
-            label = list(set(object))
+            object = list(set(object))
             if not object: continue
             string += label + "    =    [\n"
             for item in object:

@@ -129,6 +129,7 @@ class SaberPak(SaberFileGeneric):
     def compileData(self):
         stream = StreamWriter()
         stream.writeInt(len(self.children))
+        self.recalculateOffsets()
 
         for child in self.children.values():
             stream.write(child.formatData())

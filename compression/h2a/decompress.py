@@ -2,9 +2,10 @@ import zlib, os
 from common.data_parsing import StreamParser
 
 
-def decompress(data):
+def decompressor(data):
     stream = StreamParser(data)
     count = stream.readInt(8)
+    print(count)
 
     offsets = [stream.readInt(8) for i in range(count)]
     offsets.append(len(data))
