@@ -118,13 +118,17 @@ class SaberPak(SaberFileGeneric):
 
     def addEntry(self, path, data_type):
         child = self.Child()
+        name = path.split("/")[-1].split(".")[0]
         if type(data_type) != int:
             data_type = self.type_definitions.get(data_type, -1)
         if data_type not in list(self.type_definitions.values()):
             print("Unknown type")
             return
-        child.loadFromFile(path, data_type)
-        self.importChild(child.string, child)
+        if name in self.children.keys():
+            self.children[name].loadFromFile(path, data_type)
+        else:
+            child.loadFromFile(path, data_type)
+            self.importChild(child.string, child)
         self.recalculateOffsets()
 
     # -----------------------------------------------------Compile Data Over Ride

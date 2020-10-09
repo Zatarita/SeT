@@ -18,7 +18,6 @@ class Template:
         stream.burn(15)
         dependency_count = stream.readInt(4)
         stream.burn(6)
-        print(stream.tell())
         for i in range(dependency_count):
             self.dependecies.append(stream.readString())
             stream.burn(6)

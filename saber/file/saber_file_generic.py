@@ -21,6 +21,9 @@ class SaberFileGeneric(FileGeneric, metaclass=ABCMeta):
         self.children += data
 
     def exportChild(self, path, name):
+        if name not in self.children:
+            print("unresolved reference. Ignoring: " + name)
+            return
         with open(path, "wb") as file:
             file.write(self.children[name].getData())
 

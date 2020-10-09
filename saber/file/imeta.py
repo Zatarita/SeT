@@ -48,8 +48,9 @@ class Imeta(SaberFileGeneric):
             self.size3 = stream.readInt(4)
             stream.burn(4)
 
-        def loadFromFile(self, file, size):
-            # to - do
+        def loadFromFile(self, file):
+            stream = StreamParser(open(file, "rb").read())
+            self.loadFromStream(stream)
             pass
 
         def typeFromIpakChild(self, ipak_child):
@@ -100,6 +101,15 @@ class Imeta(SaberFileGeneric):
         for i in range(count):
             new_child = self.Child(data_stream)
             self.children.update({new_child.string: new_child})
+
+    def addEntry(self, path,):
+        name = path.split("/")[-1].split(".")[0]
+        if name in self.children.keys():
+            self.children[name].loadFromFile(path)
+        else:
+            child = self.Child()
+            child.loadFromFile(path)
+            self.importChild(child.string, child)
 
 
     # -----------------------------------------------------Compile Data Over Ride
