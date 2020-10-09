@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QVBoxLayout, QFormLayout, QComboBox
 
 
 class WindowUI(QMainWindow):
@@ -7,8 +7,11 @@ class WindowUI(QMainWindow):
         self.open_paks = QTreeWidget()
         self.open_paks.setHeaderHidden(True)
 
-        self.layout = QHBoxLayout()
+        self.scope_layout = QFormLayout()
+        self.layout = QVBoxLayout()
         self.widget = QWidget()
+
+        self.scope_combo = QComboBox()
 
         self.file = self.menuBar().addMenu("File")
         self.file_open = self.file.addAction("Open")
@@ -32,9 +35,12 @@ class WindowUI(QMainWindow):
         self.edit.addSeparator()
 
         self.edit_delete = self.edit.addAction("Delete")
-        self.edit_delete_recursive = self.edit.addAction("Delete Recursive")
         self.edit_delete.setShortcut("Delete")
-        self.edit_delete_recursive.setShortcut("Shift+Delete")
+
+        self.edit.addSeparator()
+
+        self.edit_build = self.edit.addAction("Build Imeta")
+        self.edit_build.setShortcut("F2")
 
         self.initWindow()
 

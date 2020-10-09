@@ -4,6 +4,7 @@ from saber.definitions.template import Template
 from tools.recursive_template_import import recursiveTemplateImport
 from saber.file import *
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog, QTreeWidget, QMessageBox
 
 
@@ -16,14 +17,23 @@ class Window(WindowUI):
         self.paks = {}
         self.tree_items = []
 
+        self.scope_layout.addRow("Scope", self.scope_combo)
+        self.layout.addLayout(self.scope_layout)
         self.layout.addWidget(self.open_paks)
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
+        self.scope = ""
+
         self.file_open.triggered.connect(self.open)
+        self.file_save_as.triggered.connect(self.saveAs)
 
         self.edit_extract.triggered.connect(self.extract)
         self.edit_extract_recursive.triggered.connect(self.extractRecursive)
+        self.edit_inject.triggered.connect(self.inject)
+        self.edit_inject_recursive.triggered.connect(self.injectRecursive)
+        self.edit_delete.triggered.connect(self.delete)
+        self.edit_build.triggered.connect(self.buildImeta)
 
     def open(self):
         path, _ = QFileDialog.getOpenFileName(self, "Open S3dpak", "", "s3dpak (*.s3dpak)")
@@ -64,15 +74,63 @@ class Window(WindowUI):
                 entry.addChildText(name)
 
             self.tree_items.append(entry)
+            self.scope_combo.addItem(path.split("/")[-1].split(".")[0])
 
     def extract(self):
         for item in self.open_paks.selectedItems():
-            test = (item.parent().text(0), item.text(0))
+            path = QFileDialog.getExistingDirectory(self, "Save directory")
             s3d, imeta = self.paks[item.parent().text(0)]
-            s3d.exportChild("test", item.text(0))
+            s3d.exportChild(path + "/" + item.text(0), item.text(0))
 
     def extractRecursive(self):
         for item in self.open_paks.selectedItems():
+            path = QFileDialog.getExistingDirectory(self, "Save directory")
             s3d, ime = self.paks[item.parent().text(0)]
+
+            # if it's not a template, just extract
+            if s3d.children[item.text(0)].type != 12:
+                s3d.exportChild(path + "/" + item.text(0), item.text(0))
+                return
+
+            os.mkdir(path + "/" + item.text(0))
             template = Template(s3d.children[item.text(0)].data)
-            template.extractRecursive(ime, "test")
+            template.extractRecursive(ime, path + "/" + item.text(0))
+
+    def inject(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Open template", "", "template (*.tpl)")
+        s3dpak, imeta = self.getScope()
+        s3dpak.addEntry(path, "Template")
+        test = self.open_paks.findItems(self.scope_combo.currentText(), Qt.MatchContains)
+        test[0].addChildText(path.split("/")[-1].split(".")[0])
+
+    def injectRecursive(self):
+        path = QFileDialog.getExistingDirectory(self, "Template directory")
+        s3dpak, imeta = self.getScope()
+
+        self.paks[self.scope_combo.currentText()] = recursiveTemplateImport(s3dpak, imeta, path)
+
+        test = self.open_paks.findItems(self.scope_combo.currentText(), Qt.MatchContains)
+        test[0].addChildText(path.split("/")[-1].split(".")[0])
+
+    def buildImeta(self):
+        path, _ = QFileDialog.getSaveFileName(self, "Save Imeta", "", "imeta (*.imeta)");
+        _, imeta, = self.getScope()
+        imeta.save(path)
+
+    def delete(self):
+        pass
+
+
+
+    def save(self):
+        pass
+
+    def saveAs(self):
+        path, _ = QFileDialog.getSaveFileName(self, "Save File", "", "s3dpak (*.s3dpak)");
+        s3dpak, imeta = self.getScope()
+        s3dpak.save(path)
+
+
+
+    def getScope(self):
+        return self.paks[self.scope_combo.currentText()]

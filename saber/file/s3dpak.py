@@ -61,6 +61,8 @@ class SaberPak(SaberFileGeneric):
             # set offset to -1 so we can check if offsets dirty later
             self.offset = -1
             self.size = len(self.data)
+            if ".tpl" in path:
+                path = path.split(".")[0]
             self.string = path.split("/")[-1]
             self.string_length = len(self.string)
             self.type = file_type
